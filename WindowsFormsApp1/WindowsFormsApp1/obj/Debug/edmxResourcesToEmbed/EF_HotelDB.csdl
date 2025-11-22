@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HoteloDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="HoteloDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="RoomTables" EntityType="HoteloDBModel.RoomTable" />
+    <EntitySet Name="sysdiagrams" EntityType="HoteloDBModel.sysdiagram" />
+    <EntitySet Name="ReservationsTables" EntityType="HoteloDBModel.ReservationsTable" />
+    <AssociationSet Name="FK_ReservationsTable_RoomTable" Association="HoteloDBModel.FK_ReservationsTable_RoomTable">
+      <End Role="RoomTable" EntitySet="RoomTables" />
+      <End Role="ReservationsTable" EntitySet="ReservationsTables" />
+    </AssociationSet>
+    <EntitySet Name="UsersTables" EntityType="HoteloDBModel.UsersTable" />
+    <AssociationSet Name="FK_ReservationsTable_UsersTable" Association="HoteloDBModel.FK_ReservationsTable_UsersTable">
+      <End Role="UsersTable" EntitySet="UsersTables" />
+      <End Role="ReservationsTable" EntitySet="ReservationsTables" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="RoomTable">
+    <Key>
+      <PropertyRef Name="RoomID" />
+    </Key>
+    <Property Name="RoomID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoomType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ReservationsTables" Relationship="HoteloDBModel.FK_ReservationsTable_RoomTable" FromRole="RoomTable" ToRole="ReservationsTable" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="ReservationsTable">
+    <Key>
+      <PropertyRef Name="ReservationID" />
+    </Key>
+    <Property Name="ReservationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="RoomID" Type="Int32" Nullable="false" />
+    <Property Name="CheckInDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="CheckOutDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="TotalPrice" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="RoomTable" Relationship="HoteloDBModel.FK_ReservationsTable_RoomTable" FromRole="ReservationsTable" ToRole="RoomTable" />
+    <NavigationProperty Name="UsersTable" Relationship="HoteloDBModel.FK_ReservationsTable_UsersTable" FromRole="ReservationsTable" ToRole="UsersTable" />
+  </EntityType>
+  <Association Name="FK_ReservationsTable_RoomTable">
+    <End Type="HoteloDBModel.RoomTable" Role="RoomTable" Multiplicity="1" />
+    <End Type="HoteloDBModel.ReservationsTable" Role="ReservationsTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RoomTable">
+        <PropertyRef Name="RoomID" />
+      </Principal>
+      <Dependent Role="ReservationsTable">
+        <PropertyRef Name="RoomID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="UsersTable">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Fullname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ReservationsTables" Relationship="HoteloDBModel.FK_ReservationsTable_UsersTable" FromRole="UsersTable" ToRole="ReservationsTable" />
+  </EntityType>
+  <Association Name="FK_ReservationsTable_UsersTable">
+    <End Type="HoteloDBModel.UsersTable" Role="UsersTable" Multiplicity="1" />
+    <End Type="HoteloDBModel.ReservationsTable" Role="ReservationsTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UsersTable">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="ReservationsTable">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
